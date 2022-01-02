@@ -39,7 +39,7 @@ export const initialOldPriceData =
         setSize([width, height]);
       }
       window.addEventListener('resize', updateSize);
-      updateSize();
+    //   updateSize();
       return () => window.removeEventListener('resize', updateSize);
     }, []);
     return size;
@@ -52,7 +52,8 @@ export default function LineChart(props) {
 
   const margin = { top: 20, right: 20, bottom: 40, left: 70 };
 
-
+    console.log('width: ', width)
+    console.log('width: ', height)
   const { symbol } = props;
   const getDataFromAlpaca = async () => {
       let resp = alpaca.getBarsV2(
@@ -74,12 +75,9 @@ export default function LineChart(props) {
           if(bars.length && !_.isEqual(bars, priceData) ){
               const tempPriceData = [...priceData]
               if(priceData.length){
-               console.log(2)
                setPriceData([...bars]);
                setOldPriceData([...tempPriceData])
             }else{
-
-              console.log(3, priceData)
               setPriceData([...bars]);
               setOldPriceData([...bars])
           }
@@ -91,9 +89,13 @@ export default function LineChart(props) {
   }, [symbol]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(()=>{
+    //   console.log('draw')
       draw();
   }, [oldPriceData, width, height]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  useEffect(()=>{
+    setTimeout(()=>window.dispatchEvent(new Event('resize')), 0);
+  },[])
 
   function transition() {
     const svg = d3.select(".svg");
@@ -329,7 +331,6 @@ export default function LineChart(props) {
   }
 
   const draw = () => {
-      console.log('draw: ', oldPriceData[0])
     let data = [];
 
     if (width && height) {
@@ -341,7 +342,7 @@ export default function LineChart(props) {
         .select(".vis-linechart")
         .append("svg")
         .attr("width", width + margin.left + margin.right + 100)
-        .attr("height", height + margin.top + margin.bottom)
+        .attr("height", height + margin.top + margin.bottom + 55)
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
         .attr("class", "svg");
@@ -373,7 +374,7 @@ export default function LineChart(props) {
       svg
         .append("text")
         .attr("transform", "rotate(-90)")
-        .attr("y", width + margin.right + 60)
+        .attr("y", width + margin.left + margin.right - 20)
         .attr("x", 0 - height / 2)
         .attr("dy", "1em")
         .style("text-anchor", "middle")
@@ -383,7 +384,7 @@ export default function LineChart(props) {
         .append("text")
         .attr(
           "transform",
-          "translate(" + width / 2 + " ," + (height + margin.top + 30) + ")"
+          "translate(" + width / 2 + " ," + (height + margin.top + margin.bottom) + ")"
         )
         .style("text-anchor", "middle")
         .text("Datetime");

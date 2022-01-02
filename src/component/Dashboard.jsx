@@ -134,7 +134,7 @@ export default function Dashboard () {
             </Layout>
         </Layout>
             <Footer >
-                <div style={{marginTop: -10, textAlign: 'center'}}>
+                <div style={{marginTop: -10, textAlign: 'left'}}>
                     <a href='https://github.com/junho7/d3js-stock'>Source Code </a>
                     by <a href='https://www.linkedin.com/in/jpark7/'>Junho Park</a>
                 </div>
